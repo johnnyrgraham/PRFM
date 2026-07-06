@@ -10,7 +10,7 @@
 ```
 prfm-handoff/
 ├── index.html          ← The entire site. One file. Start here.
-├── The PRFM Method - Athlete Mindset.pdf   ← Lead magnet PDF. Sent via Formspree Autoresponse link.
+├── The PRFM Method - Athlete Mindset.pdf   ← Lead magnet PDF. Linked from the Typeform End Screen.
 ├── style/
 │   ├── main.css        ← All styling. Edit here to change colours, fonts, layout.
 │   └── main.js         ← Scroll animations, count-up stats, launch-day button swap.
@@ -44,25 +44,25 @@ prfm-handoff/
 
 ## The One Thing to Do Before Launch: Wire the Forms
 
-Both forms (the orange strip under the hero, and the final CTA section) capture **name + email** and are now **wired to Formspree** — `action="https://formspree.io/f/xdarbjra"` on both. Formspree emails Ben every signup and has a dashboard to export them.
+Every "Join Waitlist" / "Send me the guide" button on the page (nav, hero, orange strip, final CTA) opens the **same Typeform popup** — form ID `mMQa0Jt5` (`https://form.typeform.com/to/mMQa0Jt5`). There are no HTML `<form>` elements left on this page; Typeform handles the name + email collection entirely inside its own popup.
 
-**Remaining step — sending the PDF automatically (Autoresponse):**
-The site promises a free "PRFM Method" PDF on signup. To have Formspree email that back to the person who just signed up, you need the **Autoresponse plugin**, which sits behind a paid Formspree plan (not the free tier — check current plan names/pricing at [formspree.io/plans](https://formspree.io/plans), as these change).
+**How it's wired:** each button carries `data-tf-popup="mMQa0Jt5"` plus `data-tf-opacity` and `data-tf-iframe-props`. A single script tag near the bottom of `index.html` — `<script src="//embed.typeform.com/next/embed.js"></script>` — auto-detects any element with `data-tf-popup` and makes it clickable. No custom JavaScript required.
 
-Formspree's autoresponse sends a text/HTML message you write — it does not attach a real file. So the working setup is:
-1. The PDF — **`The PRFM Method - Athlete Mindset.pdf`** — lives at the root of the repo, alongside `index.html`. Once pushed to GitHub and deployed on Vercel, it's automatically served as a static file at:
-   `https://yourdomain.com/The%20PRFM%20Method%20-%20Athlete%20Mindset.pdf`
-   (spaces in the filename become `%20` in the URL — that's normal and works fine in browsers and email clients; swap `yourdomain.com` for the site's real domain once it's live).
-2. In the Formspree dashboard, upgrade to a plan that includes Autoresponse, open your form → **Plugins → Autoresponse**, and turn it on.
-3. Set the "from" name, subject (e.g. "Your PRFM Method guide"), and message body. Paste the PDF's public URL into the message as a download link/button. Note: per Formspree's own docs, submission field data (like the person's name) can't be dropped into the autoresponse body unless the form is on a custom domain within a Formspree project — keep the message generic ("Hey — here's your guide...") rather than "Hey {{name}}" unless that's set up.
-4. Formspree requires a field literally named `email` to know where to send the autoresponse — both forms already have that.
-5. Test by submitting the form with a real email address and confirming the autoresponse arrives with a working PDF link.
+**If you change the Typeform form ID:** search `index.html` for `mMQa0Jt5` — it appears in all 4 buttons. Replace every instance.
 
-Test by submitting a real name + email on the live site and confirming both the notification to Ben and the autoresponse (once set up) arrive.
+**Sending the PDF ("The PRFM Method - Athlete Mindset.pdf"):**
+The PDF lives at the root of the repo, alongside `index.html`. Once deployed, it's served at:
+`https://yourdomain.com/The%20PRFM%20Method%20-%20Athlete%20Mindset.pdf`
+(swap `yourdomain.com` for the real domain once live; the `%20`s are just spaces in the filename, which is normal).
+
+To actually get that link in front of someone who signs up, add an **Ending** to the Typeform (Content panel → Endings → End Screen), and put the PDF link on the End Screen's button. Worth knowing: **linking that button to a custom URL is a Typeform Plus-plan-and-above feature** — on the free/Basic plan you can still customize the End Screen's text, but the button will link back to Typeform's own default page, not your PDF. Check current plan names/pricing at [typeform.com/pricing](https://www.typeform.com/pricing), as these change. If Ben doesn't want to pay for Plus, the fallback is to add the PDF link directly in the End Screen's body text (a plain link works on all plans) rather than as a styled button.
+
+Test by clicking each of the 4 buttons on the live site, submitting the popup with a real name and email, and confirming the submission shows up in the Typeform dashboard (and the End Screen link, once set up, actually opens the PDF).
 
 ---
 
 ## Launch Day: Flipping All Buttons
+
 
 Every "JOIN WAITLIST" button on the page will become "START NOW" or "APPLY NOW" in one edit.
 
@@ -82,8 +82,8 @@ To go back to waitlist mode, set it to `false` again.
 
 ## Things Not Yet Built (Open Items)
 
-- **PDF delivery** — forms are wired to Formspree and collect name + email, but the actual PDF file still needs to be added to the project and the Formspree Autoresponse plugin (paid plan) still needs to be turned on. See "Wire the Forms" above.
-- **Live spots counter** — the "100 spots" number is currently static, updated manually. A live counter requires tracking real submissions (e.g. via the Formspree dashboard) to know the real count.
+- **PDF delivery** — the site collects signups via Typeform, but the actual PDF file still needs a linked End Screen (requires Typeform Plus or above for a custom button link — see "Wire the Forms" above for the free-plan workaround).
+- **Live spots counter** — the "100 spots" number is currently static, updated manually. A live counter requires tracking real submissions (e.g. via the Typeform dashboard) to know the real count.
 - **Thank-you page / redirect** — after someone submits the waitlist form, they currently see the browser's default behaviour. Add a `_next` hidden input pointing to a thank-you URL once you have one.
 
 ---
@@ -146,6 +146,19 @@ These were deliberate decisions — breaking them will make the site look incons
 
 ---
 
+## How the "Join Waitlist" Buttons Work (Not All the Same)
+
+Two different behaviours happen depending on which button someone clicks, by design:
+
+1. **Nav bar, hero, orange strip, and final CTA** (4 buttons total) — each one opens the **same Typeform popup** directly via `data-tf-popup="mMQa0Jt5"`. No page navigation, no scrolling — the popup just appears on top of whatever section the person is looking at. This is the fast path: sign up without leaving where you are.
+2. **All 7 programme card buttons** — plain anchor links (`href="#top"`) that scroll back up to the top of the page, where the nav bar's and hero's "Join Waitlist" buttons (both of which open the Typeform popup) are visible. They don't open the popup directly themselves.
+
+If you add a new "Join Waitlist" button somewhere on the page, decide which of these two patterns it should follow rather than inventing a third. A new button that should let people sign up immediately should carry the same `data-tf-popup="mMQa0Jt5" data-tf-opacity="70" data-tf-iframe-props="title=PRFM Waitlist"` attributes as the 4 above. A new button further down the page (e.g. a future testimonial CTA) should probably just be `<a href="#top" class="...waitlist-cta" data-launch-text="...">Join Waitlist</a>`, matching the programme cards.
+
+**Changing the Typeform:** search `index.html` for `mMQa0Jt5` (appears in all 4 popup-trigger buttons) and replace it if the form ID ever changes. The embed itself is powered by one script tag near the bottom of the page — `<script src="//embed.typeform.com/next/embed.js"></script>` — don't remove it or the buttons stop working.
+
+---
+
 ## How the Scroll Animations Work
 
 Every element with `class="reveal"` starts invisible and fades up when it enters the viewport. This is handled by `main.js` using an `IntersectionObserver` — no library needed.
@@ -162,8 +175,8 @@ The three stat numbers (17 years / 3 countries / 1000+ clients) count up from 0 
 | # | Section | Background | Notes |
 |---|---------|-----------|-------|
 | 01 | Nav bar | Black | Sticky. Logo + links + CTA. |
-| 02 | Hero | Black | Headline, sub-copy, hero photo, primary CTA. |
-| 03 | Waitlist strip | Orange | Email form. Wire this to your backend. |
+| 02 | Hero | Black | Headline, sub-copy, hero photo, primary CTA. "Join Waitlist" opens the Typeform popup (see "How the Join Waitlist Buttons Work" below). |
+| 03 | Waitlist strip | Orange | Button opens the Typeform popup. |
 | 04 | Philosophy | Cream | Three pillars: Goal First, Built by Hand, Evolves with You. |
 | 05 | How it works | Black | Five-step process. |
 | 06 | Programme table | Cream | Two-row card grid. 7 programmes. Pro is the funnel target. |
@@ -171,7 +184,7 @@ The three stat numbers (17 years / 3 countries / 1000+ clients) count up from 0 
 | 08 | Coach Ben | Cream | Bio, stats, Ben's competition photo. |
 | 09 | Testimonials | Black | Three real clients with photos. |
 | 10 | Pull quote | Cream | Ben's founder quote. |
-| 11 | Final CTA | Black | Second email form. Same endpoint as section 03. |
+| 11 | Final CTA | Black | Button opens the same Typeform popup as sections 01/02/03. |
 | — | Footer | Black | Logo + copyright. |
 
 
@@ -188,7 +201,7 @@ This site uses a deliberate, well-documented structure. Before making any change
 5. **Image paths in CSS use `../images/`** (one level up from `style/`). Image paths in HTML use `images/` (relative to root).
 6. **The launch-day button swap is in `main.js` — `const LAUNCH_MODE = false`.** Changing this to `true` flips every CTA on the page. Don't modify individual button text manually.
 7. **The programme table is NOT one grid — it's three independent tiers stacked in a flex column (`.prog-tiers`), each with its own sub-grid:** `.tier-entry-grid` (Base/Build, 2 equal columns), `.tier-goals-grid` (Strong/Capacity/Prime, 3 equal columns), and `.tier-access-grid` (Pro/Custom, 3fr + 2fr columns). Adding a card means adding it to the right tier's grid and adjusting that grid's own `grid-template-columns` — not tracking a single 5-column total across the whole table.
-8. **Both email forms POST to the same endpoint.** If you update one `action`, update the other.
+8. **All four "Join Waitlist" / "Send me the guide" buttons that open Typeform share one form ID (`mMQa0Jt5`) via `data-tf-popup`.** If you change the Typeform, update all four — search `index.html` for `mMQa0Jt5`.
 
 ---
 

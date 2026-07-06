@@ -44,11 +44,6 @@
   .waitlist-cta{text-transform:uppercase;}
   .ghost-btn{background:transparent; color:var(--black); border:1px solid rgba(17,17,17,0.3); font-family:'Inter',sans-serif; font-weight:500; font-size:13px; letter-spacing:0.04em; padding:14px 25px; cursor:pointer; border-radius:6px;}
   .ghost-btn:hover{background:rgba(17,17,17,0.05);}
-  .input{padding:13px 16px; border:none; font-family:'IBM Plex Mono',monospace; font-size:13px; min-width:200px; outline:none; border-radius:6px;}
-  /* Spam-trap field for the two email forms — must stay visually hidden but present in the DOM
-     (that's what makes it work as a honeypot), so it's a class, not an inline style, per the
-     "no inline styles" rule below. */
-  .hp-field{position:absolute; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none;}
   .tag-pill{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.04em; padding:5px 10px; border:1px solid currentColor;}
 
   /* =====================================================================
@@ -137,7 +132,6 @@
   .strip h2{font-weight:900; font-size:clamp(21px,2.8vw,30px); text-transform:uppercase; max-width:520px;}
   .strip-sub{font-size:11px; letter-spacing:0.04em; color:rgba(17,17,17,0.7); font-family:'IBM Plex Mono',monospace; margin-top:0;}
   .strip-form{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px;}
-  .strip .input{background:var(--white);}
   .strip-mark{height:20px; display:block; margin-bottom:0;}
 
   /* 07 GUARANTEE modifier — logo becomes a corner badge, headline/subtext go side by side.
@@ -386,7 +380,7 @@
     .quote-photo{width:100%; height:200px;}
     .quote-content{padding:24px 22px;}
     .final-form{flex-direction:column;}
-    .final-form .input, .final-form .bracket-btn{width:100%;}
+    .final-form .bracket-btn{width:100%;}
   }
   /* Small phone: collapse pillars to single column, hide nav links */
   @media (max-width: 480px){
