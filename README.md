@@ -1,4 +1,4 @@
-#PRFM Training — Landing Page
+# PRFM Training — Landing Page
 Pre-launch waitlist landing page for PRFM Training, a remote strength & conditioning coaching brand built around Coach Ben Thompson. 
 
 **Status**
