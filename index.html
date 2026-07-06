@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRFM Training — Performance Console</title>
+<link rel="icon" type="image/png" href="images/favicon-tile-black.png">
+<link rel="apple-touch-icon" href="images/favicon-tile-black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+<!--
+  ================================================================
+  EDITING THIS SITE — READ THIS FIRST
+  ================================================================
+  This is a single self-contained HTML file. All styling lives in
+  the <style> block in <head>. All content lives in the <body>,
+  broken into 11 numbered sections, each marked with a comment
+  like "04 PHILOSOPHY". To find something, search for its
+  section number or name — content and its styling are grouped
+  together and commented, so you shouldn't need to read the whole
+  file to make one change.
+
+  FILE STRUCTURE AT A GLANCE
+  ----------------------------------------------------------------
+  <head>
+    <style>           all CSS. Organised into commented blocks,
+                       each named after the section it styles
+                       (e.g. /* ===== programme table ===== */),
+                       in the same order as the sections below.
+                       A mobile-only override block sits at the
+                       very end of <style> (@media max-width:900px).
+  <body>
+    01 CONSOLE BAR     sticky nav, logo, "Join waitlist" nav button
+    02 HERO            headline, sub-copy, hero CTA, hero photo
+    03 ORANGE STRIP    email capture band under the hero
+    04 PHILOSOPHY      "goal first" pillars section (cream bg)
+    05 HOW IT WORKS    5-step process row
+    06 PROGRAMME TABLE the 7 programmes, prices, and their CTAs
+    07 GUARANTEE       orange "it's coached" band
+    08 COACH BEN       bio, stats, athlete photo (NOT Ben — see
+                       note in that section)
+    09 TESTIMONIALS    real client quotes — see note in that section
+    10 PULL QUOTE      Ben's own quote about his coaching approach
+    11 FINAL CTA       closing email capture + footer
+    <script>           scroll animations, count-up stats, and the
+                       LAUNCH_MODE switch (see below)
+
+  COLOUR / FONT / SPACING SYSTEM
+  ----------------------------------------------------------------
+  All brand colours are CSS variables defined once at the top of
+  <style> inside :root{...}: --black, --cream, --white, --orange.
+  Change a colour there and it updates everywhere — never hardcode
+  a new hex value in a section, reuse these variables instead.
+  Fonts (Inter / IBM Plex Mono / Fraunces) are loaded once via the
+  @import at the very top of <style> and applied through classes
+  like .mono — don't add new font-family declarations elsewhere.
+
+  HOW TO MAKE COMMON EDITS
+  ----------------------------------------------------------------
+  • Change a price or programme description → section 06, find the
+    programme by name (Base, Build, Strong, Capacity, Prime, Pro,
+    Custom), edit the text inside <div class="card-detail"> or the
+    <div class="card-price"> block. Layout updates automatically.
+  • Add/remove a programme → copy one whole <div class="prog-card
+    ...">...</div> block (or the .pro one, if adding another hero-style
+    card) and edit its contents. Keep the dark / outline class to match
+    its tier, and give it a grid-column span so row totals still add up
+    to 5 — see the "06 PROGRAMME TABLE" CSS comment for the full rule.
+    Update the numbered <div class="card-num">0X</div> labels afterward
+    so they stay sequential.
+  • Change a testimonial → section 09, each <div class="quote">
+    block is one testimonial (photo placeholder / stars / quote /
+    name / journey line).
+  • Change the waitlist cap number → search "spots-count" — every
+    instance is wrapped in <span class="spots-count">100</span> so
+    you can update the number in each place it appears.
+  • Change any button's pre-launch label → edit the visible text
+    inside that <button> or <a> tag. Its class="waitlist-cta" and
+    data-launch-text="..." attribute can stay as-is (see below).
+
+  LAUNCH DAY — SWAPPING ALL "JOIN WAITLIST" BUTTONS
+  ----------------------------------------------------------------
+  Every purchase/signup button on the page (nav, hero, orange strip,
+  all 7 programme rows, final CTA — 15 buttons total) already carries
+  class="waitlist-cta" and a pre-written data-launch-text="..."
+  attribute with its launch-day label ("START NOW" / "APPLY NOW").
+  To flip ALL of them at once: open the <script> tag near the
+  bottom of this file and change the line
+      const LAUNCH_MODE = false;
+  to
+      const LAUNCH_MODE = true;
+  Save the file. That's the entire launch-day step for CTA text —
+  no other edits required for the buttons themselves.
+  Two things this switch does NOT do, so handle separately on
+  launch day:
+    - The "100 SPOTS ONLY" scarcity language (search "spots-count"
+      and "SPOTS ONLY") should be removed or updated once the
+      waitlist mechanic is no longer live.
+    - Testimonials in section 09 are real but predate the current
+      7-programme structure (see the note in that section) — swap
+      in new reviews under the current programme names as they
+      come in.
+  ================================================================
+-->
+
+<!-- 01 CONSOLE BAR -->
+<!-- Sticky nav bar. .wordmark holds the logo (swaps between logo-white.png /
+     logo-black.png depending on background — see CSS). The nav-links anchor
+     to sections by id (#programmes, #philosophy, #contact). The rightmost
+     element is the primary always-visible CTA — currently routes to #contact. -->
+
+<div class="console-bar">
+  <div class="wordmark"><img src="images/logo-white.png" alt="PRFM"></div>
+  <nav class="nav-links mono">
+    <a href="#programmes">Plans</a>
+    <a href="#philosophy">Learn</a>
+    <a href="#contact">Chat</a>
+  </nav>
+  <a href="#contact" class="engage waitlist-cta" data-launch-text="[ APPLY NOW ]" style="text-decoration:none; display:inline-block;">Join Waitlist</a>
+</div>
+
+<!-- 02 HERO
+     Headline uses 3 separate CSS animation effects (strike-through on
+     "Stop exercising", pulse-glow on "training") — these are visual
+     details, not something you need to touch when editing copy. Just
+     edit the text inside the <span> tags; the animations still apply. -->
+<section class="hero grid-bg">
+  <div class="hero-copy">
+    <div class="tag">// SESSION LOG — BUILDING YOUR PROGRAMME</div>
+    <h1 class="headline">
+      <span class="headline-line one"><span class="strike">Stop exercising.</span></span>
+      <span class="headline-line two">Start <span class="pulse-word">training.</span></span>
+    </h1>
+    <p class="hero-sub">Performance over aesthetics. A real coach builds your plan — no AI, no template.</p>
+    <div class="cta-row">
+      <button class="bracket-btn waitlist-cta" data-launch-text="[ ENGAGE: START NOW ]">Join Waitlist</button>
+      <p class="hero-price">From <span class="price-orange">$89</span> one-time — no subscription. <a href="#programmes">See programmes →</a></p>
+      <p class="hero-price" style="margin-top:6px;">Waitlist capped at <span class="price-orange spots-count">100</span> spots.</p>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="reticle tl"></div>
+    <div class="reticle br"></div>
+    <div class="visual-tag">SESSION IN PROGRESS</div>
+  </div>
+</section>
+
+<!-- 03 ORANGE WAITLIST STRIP — email capture. Real <form>, ready to go live:
+     replace the action="YOUR_FORM_ENDPOINT_HERE" below with your Formspree
+     (or Mailchimp/ConvertKit) endpoint — see HANDOFF.md "Wire the Forms".
+     _gotcha is a honeypot spam trap Formspree recognises automatically;
+     leave it hidden, don't remove it. Once you have a thank-you page, add
+     a "_next" hidden input here pointing to its URL (see HANDOFF.md). -->
+<section class="strip">
+  <h2>Achieve your goal.</h2>
+  <p class="strip-sub">100 waitlist spots · free "PRFM Method" PDF on signup</p>
+  <form class="strip-form" action="YOUR_FORM_ENDPOINT_HERE" method="POST">
+    <input class="input" type="email" name="email" required placeholder="you@email.com">
+    <input type="hidden" name="_subject" value="New PRFM waitlist signup — Hero Strip">
+    <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off">
+    <button class="btn-black waitlist-cta" data-launch-text="[ APPLY NOW ]" type="submit">Send me the guide</button>
+  </form>
+</section>
+
+<!-- 04 PHILOSOPHY -->
+<section class="on-cream pad" id="philosophy">
+  <div class="philosophy-header reveal-group">
+    <div class="reveal" style="--i:0">
+      <div class="eyebrow">// THE PRFM PHILOSOPHY</div>
+      <h2 class="h2" style="margin-top:16px;">You have a performance in mind.<br>These plans are how you get there.</h2>
+    </div>
+    <p class="body-text philosophy-body reveal" style="--i:1">Athletes don't exercise. They train — toward something specific. PRFM works the same way: the goal comes first, the programme is how we reach it. Every session, every check-in, every adjustment exists to get you to your performance. Aesthetic results follow. They're not the brief.</p>
+  </div>
+  <div class="pillars reveal-group">
+    <div class="pillar reveal" style="--i:0">
+      <div class="pillar-title">Goal First</div>
+      <p>Your goal anchors everything. The programme, the timeline, the check-ins — all of it works backward from where you're trying to get to.</p>
+    </div>
+    <div class="pillar reveal" style="--i:1">
+      <div class="pillar-title">Built by Hand</div>
+      <p>Every plan is written by hand, personally. No AI, no templates, no recycled blocks. If it's in your programme, it's there for you.</p>
+    </div>
+    <div class="pillar reveal" style="--i:2">
+      <div class="pillar-title">Evolves With You</div>
+      <p>Your plan isn't fixed. As you progress, it changes — adjustments are made so the work always matches where you actually are.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 HOW IT WORKS -->
+<section class="pad grid-bg" style="text-align:center;">
+  <div class="eyebrow reveal">// HOW IT WORKS</div>
+  <h2 class="h2 reveal" style="margin-top:16px;">Five steps. No guesswork.</h2>
+  <div class="steps reveal-group">
+    <div class="step reveal" style="--i:0"><div class="num">01</div><div class="lbl">Tell us your goal</div></div>
+    <div class="step reveal" style="--i:1"><div class="num">02</div><div class="lbl">Free consultation call</div></div>
+    <div class="step reveal" style="--i:2"><div class="num">03</div><div class="lbl">Choose the right plan</div></div>
+    <div class="step reveal" style="--i:3"><div class="num">04</div><div class="lbl">Train — we watch</div></div>
+    <div class="step reveal" style="--i:4"><div class="num">05</div><div class="lbl">Progress. Repeat.</div></div>
+  </div>
+</section>
+
+<!-- 06 PROGRAMME TABLE — see the detailed CSS comment for this section
+     (search "06 PROGRAMME TABLE" in <style>) for the full explanation of
+     the card-grid layout (row 1: five equal tiers · row 2: Pro + Custom)
+     before editing. -->
+<section class="on-cream pad" id="programmes">
+  <div class="eyebrow reveal" style="text-align:center;">// CHOOSE YOUR PROGRAMME</div>
+  <h2 class="h2 reveal" style="margin-top:16px; text-align:center;">Seven programmes. One progression.</h2>
+  <p class="body-text reveal" style="max-width:600px; margin:14px auto 0; text-align:center; color:var(--gray-on-cream);">Start with a one-time block, move into a monthly plan built around your goal, or go all-in with Ben personally. Every tier stacks toward the next.</p>
+
+  <div class="prog-tiers reveal-group">
+
+    <!-- TIER 1: Entry — dashed border enclosure, 2-column grid -->
+    <div class="prog-tier-group reveal" style="--i:0">
+      <span class="prog-tier-label">// ENTRY — ONE TIME</span>
+      <div class="tier-entry-grid">
+        <div class="prog-card dark">
+          <div class="card-ribbon">START HERE</div>
+          <div class="card-kicker">ENTRY</div>
+          <div class="card-num">01</div>
+          <div class="card-name">Base</div>
+          <div class="card-detail">4 weeks · 3 sessions/week — foundation building</div>
+          <div class="card-price">$89<span class="price-week">one-time</span></div>
+          <button class="bracket-btn waitlist-cta" data-launch-text="[ START NOW ]">Join Waitlist</button>
+        </div>
+        <div class="prog-card dark">
+          <div class="card-kicker">ENTRY</div>
+          <div class="card-num">02</div>
+          <div class="card-name">Build</div>
+          <div class="card-detail">4 weeks · 4 sessions/week — conditioning, strength or muscle focus</div>
+          <div class="card-price">$89<span class="price-week">one-time</span></div>
+          <button class="bracket-btn waitlist-cta" data-launch-text="[ START NOW ]">Join Waitlist</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIER 2: Pick your goal — dashed border enclosure, 3-column grid -->
+    <div class="prog-tier-group reveal" style="--i:1">
+      <span class="prog-tier-label">// PICK YOUR GOAL — $149/MO</span>
+      <div class="tier-goals-grid">
+        <div class="prog-card outline">
+          <div class="card-kicker">PICK YOUR GOAL</div>
+          <div class="card-num">03</div>
+          <div class="card-name">Strong</div>
+          <div class="card-detail">Barbell strength &amp; bodyweight mastery</div>
+          <div class="card-price">$149<span class="price-week">/mo · $35/wk</span></div>
+          <button class="ghost-btn waitlist-cta" data-launch-text="[ APPLY NOW ]">Join Waitlist</button>
+        </div>
+        <div class="prog-card outline">
+          <div class="card-kicker">PICK YOUR GOAL</div>
+          <div class="card-num">04</div>
+          <div class="card-name">Capacity</div>
+          <div class="card-detail">Aerobic capacity &amp; endurance — crush any endurance event</div>
+          <div class="card-price">$149<span class="price-week">/mo · $35/wk</span></div>
+          <button class="ghost-btn waitlist-cta" data-launch-text="[ APPLY NOW ]">Join Waitlist</button>
+        </div>
+        <div class="prog-card outline">
+          <div class="card-kicker">PICK YOUR GOAL</div>
+          <div class="card-num">05</div>
+          <div class="card-name">Prime</div>
+          <div class="card-detail">Full body S&amp;C — the most well-rounded athlete programme</div>
+          <div class="card-price">$149<span class="price-week">/mo · $35/wk</span></div>
+          <button class="ghost-btn waitlist-cta" data-launch-text="[ APPLY NOW ]">Join Waitlist</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIER 3: All-access + Private — no dashed wrapper; Pro's solid border is the signal -->
+    <div class="prog-tier-group tier-access reveal" style="--i:2">
+      <div class="tier-access-grid">
+        <div class="prog-card pro">
+          <div class="card-ribbon wide">RECOMMENDED</div>
+          <div class="pro-copy">
+            <div class="card-kicker">ALL-ACCESS</div>
+            <div class="card-num">06</div>
+            <div class="card-name">Pro</div>
+            <div class="card-detail">Full access to Strong, Capacity AND Prime — train all three, switch anytime.</div>
+            <div class="pro-value">Strong + Capacity + Prime — $70/mo less than buying all three</div>
+          </div>
+          <div class="pro-order">
+            <div class="card-price">$219<span class="price-week">/mo · $55/wk</span></div>
+            <button class="bracket-btn waitlist-cta" data-launch-text="[ APPLY NOW ]">Join Waitlist</button>
+          </div>
+        </div>
+        <div class="prog-card dark">
+          <div class="card-kicker">PRIVATE · 10 MAX</div>
+          <div class="card-num">07</div>
+          <div class="card-name">Custom</div>
+          <div class="card-detail">Fully bespoke plan · personalised nutrition &amp; lifestyle guide · full access to Ben</div>
+          <div class="card-price">$529<span class="price-week">/mo · $125/wk</span></div>
+          <button class="bracket-btn waitlist-cta" data-launch-text="[ APPLY NOW ]">Join Waitlist</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="progress-path reveal">
+    <span class="node">Base</span>
+    <span class="arrow">→</span>
+    <span class="node">Build</span>
+    <span class="arrow">→</span>
+    <span class="node">Strong / Capacity / Prime</span>
+    <span class="arrow">→</span>
+    <span class="node">Pro</span>
+    <span class="arrow">→</span>
+    <span class="node">Custom</span>
+  </div>
+</section>
+
+<!-- 07 GUARANTEE — logo is a corner badge (out of the reading flow); "[ THE GUARANTEE ]"
+     spans centered above both columns as a section-wide label (not tucked inside the left
+     column); headline and subtext sit side by side, top-aligned with the subtext nudged
+     down slightly so it reads as a subtitle under the headline rather than level with it.
+     This is a modifier (.guarantee) layered on top of the shared .strip class, so section
+     03's orange waitlist strip is untouched. -->
+<section class="strip guarantee">
+  <img src="images/logo-black.png" alt="PRFM" class="guarantee-mark">
+  <span class="tag-pill" style="color:var(--black); border-color:var(--black);">[ THE GUARANTEE ]</span>
+  <div class="guarantee-header">
+    <h2 style="font-weight:900; font-size:clamp(22px,3vw,34px); text-transform:uppercase;">It's not send-and-forget. It's coached.</h2>
+    <p class="guarantee-sub">We don't hand you a plan and disappear. We build it personally, after talking to you — and we're the ones watching how you respond to it, not an app guessing on your behalf.</p>
+  </div>
+</section>
+
+<!-- 08 COACH BEN — uses a real photo of Ben competing (ben-lunge-event.jpg), confirmed
+     with Ben directly. He's fine being pictured; he just doesn't want the brand built
+     around him — so keep his face scoped to this one section, don't add more of him
+     elsewhere on the page. The three stat numbers below start at "0" in the HTML on
+     purpose — a script at the bottom of the file counts them up to the number in
+     data-target="N" when they scroll into view. To change a stat's final value, edit
+     data-target, not the "0" between the tags. Add a data-suffix="..." attribute (e.g.
+     "+") if the final number should show a suffix once counting finishes, as the
+     "Clients trained" stat does. -->
+<section class="on-cream pad">
+  <div class="ben-grid">
+    <div class="ben-photo reveal">
+      <div class="reticle tl"></div>
+      <div class="reticle br"></div>
+      <div class="photo-label on-light">[ BEN THOMPSON — IN COMPETITION ]</div>
+    </div>
+    <div class="reveal">
+      <div class="eyebrow">// YOUR COACH</div>
+      <h2 class="ben-headline">Not AI. <span style="color:var(--orange);">Built by hand.</span></h2>
+      <p class="ben-bio">Coach Speedy — 17 years in the industry, competing and coaching at the highest level across New Zealand, Kuwait and Dubai. Diploma in personal training, sporting performance and strength conditioning. CrossFit Level 1 & 2. Now building PRFM as a remote coaching brand, worldwide, one programme at a time.</p>
+    </div>
+  </div>
+  <div class="stat-row on-cream reveal" style="margin-top:56px; border-radius:2px;">
+    <div class="stat"><div class="num" data-target="17">0</div><div class="lbl">Years coaching</div></div>
+    <div class="stat"><div class="num" data-target="3">0</div><div class="lbl">Countries</div></div>
+    <div class="stat"><div class="num" data-target="1000" data-suffix="+">0</div><div class="lbl">Clients trained</div></div>
+  </div>
+</section>
+
+<!-- 09 TESTIMONIALS / FIELD REPORTS -->
+<section class="pad">
+  <div class="eyebrow reveal">// FIELD REPORTS</div>
+  <h2 class="h2 reveal" style="margin-top:16px;">What changes when you train with a purpose.</h2>
+  <div class="quotes reveal-group">
+
+    <div class="quote reveal" style="--i:0">
+      <div class="quote-card">
+        <div class="quote-photo"><img src="images/testimonial-josh.jpg" alt="Josh P."></div>
+        <div class="quote-content">
+          <div class="stars">★★★★★</div>
+          <blockquote>"After a year with Ben and the PRFM method, I went from not even qualifying to winning NZ CrossFit Champs. His depth of knowledge in functional movement is next level."</blockquote>
+          <div class="quote-meta">
+            <div class="name">Josh P.</div>
+            <div class="journey">NZ CROSSFIT CHAMPS WINNER · FEB 2024</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote reveal" style="--i:1">
+      <div class="quote-card">
+        <div class="quote-photo"><img src="images/testimonial-sara.jpg" alt="Sara"></div>
+        <div class="quote-content">
+          <div class="stars">★★★★★</div>
+          <blockquote>"I've been training with Coach Ben since 2019. His programs are challenging but genuinely fun — my results have been unreal and I'm in love with fitness again."</blockquote>
+          <div class="quote-meta">
+            <div class="name">Sara</div>
+            <div class="journey">CLIENT SINCE 2019 · NOV 2021</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote reveal" style="--i:2">
+      <div class="quote-card">
+        <div class="quote-photo"><img src="images/testimonial-liam.jpg" alt="Liam F."></div>
+        <div class="quote-content">
+          <div class="stars">★★★★★</div>
+          <blockquote>"The workouts are easily scalable to my level of fitness. I especially love how there are options to work around my old injuries."</blockquote>
+          <div class="quote-meta">
+            <div class="name">Liam F.</div>
+            <div class="journey">COMMONWEALTH GAMES MEDALLIST · SEP 2022</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 10 PULL QUOTE -->
+<section class="on-cream pad pullquote">
+  <div class="qmark">"</div>
+  <blockquote class="reveal">This isn't a cookie-cutter plan. It's tailored, strategic, and backed by experience. Your coach will guide you every step of the way, help you break through plateaus, and hold you accountable when motivation dips.</blockquote>
+  <div class="attr reveal">BEN THOMPSON — FOUNDER, PRFM</div>
+</section>
+
+<!-- BLOG SECTION — soft carousel. Center card is active/featured, adjacent cards are visible but faded.
+     Arrow buttons and dot indicators let visitors step through. Drag/swipe also works on touch.
+     To add a real post: add a new .blog-card div to #blog-track. The JS handles the rest.
+     To remove "coming soon": delete the .blog-soon span and update .blog-meta to a real date. -->
+<section class="blog-section">
+  <div class="eyebrow reveal" style="text-align:center;">// THE PRFM METHOD — BLOG</div>
+  <h2 class="h2 reveal" style="margin-top:16px; text-align:center;">Training intelligence. Coming soon.</h2>
+  <div class="blog-track-wrap reveal" id="blog-wrap">
+    <div class="blog-track" id="blog-track">
+      <div class="blog-card">
+        <div class="blog-tag">// MINDSET</div>
+        <div class="blog-title">Why athletes think differently about rest days</div>
+        <div class="blog-meta">COMING SOON</div>
+        <span class="blog-soon">[ NOTIFY ME ]</span>
+      </div>
+      <div class="blog-card">
+        <div class="blog-tag">// TRAINING</div>
+        <div class="blog-title">Why most programmes fail before week three</div>
+        <div class="blog-meta">COMING SOON</div>
+        <span class="blog-soon">[ NOTIFY ME ]</span>
+      </div>
+      <div class="blog-card">
+        <div class="blog-tag">// PRFM METHOD</div>
+        <div class="blog-title">What it actually means to train toward a goal — not just for one</div>
+        <div class="blog-meta">FIRST POST · COMING SOON</div>
+        <span class="blog-soon">[ NOTIFY ME ]</span>
+      </div>
+      <div class="blog-card">
+        <div class="blog-tag">// PERFORMANCE</div>
+        <div class="blog-title">The difference between conditioning and fitness — and why it matters</div>
+        <div class="blog-meta">COMING SOON</div>
+        <span class="blog-soon">[ NOTIFY ME ]</span>
+      </div>
+      <div class="blog-card">
+        <div class="blog-tag">// COACHING</div>
+        <div class="blog-title">What a good coach actually does between sessions</div>
+        <div class="blog-meta">COMING SOON</div>
+        <span class="blog-soon">[ NOTIFY ME ]</span>
+      </div>
+    </div>
+  </div>
+  <div class="blog-nav">
+    <button id="blog-prev" aria-label="Previous post">&#8592;</button>
+    <button id="blog-next" aria-label="Next post">&#8594;</button>
+  </div>
+  <div class="blog-dots" id="blog-dots"></div>
+</section>
+
+<!-- 11 FINAL CTA — same real <form> pattern as section 03, POSTing to the
+     same endpoint (see HANDOFF.md "Wire the Forms"). Keep both forms
+     pointed at the same action URL if you update one. -->
+<section class="pad grid-bg" id="contact" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+  <img src="images/logo-white.png" alt="PRFM" class="final-mark reveal" style="margin:0 auto 20px;">
+  <!-- MANUAL UPDATE: edit the number in .spots-count as waitlist fills. Currently a static placeholder. -->
+  <span class="tag-pill reveal" style="color:var(--orange); border-color:var(--orange);">[ <span class="spots-count">100</span> SPOTS ONLY — WAITLIST ]</span>
+  <h2 class="final-headline reveal">Achieve your goal. Start here.</h2>
+  <p class="final-sub reveal" style="margin-left:auto; margin-right:auto;">Free guide. Free consultation call. No commitment until you're ready.</p>
+  <form class="final-form reveal" action="YOUR_FORM_ENDPOINT_HERE" method="POST">
+    <input class="input" type="email" name="email" required placeholder="you@email.com">
+    <input type="hidden" name="_subject" value="New PRFM waitlist signup — Final CTA">
+    <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off">
+    <button class="bracket-btn waitlist-cta" data-launch-text="[ APPLY NOW ]" type="submit">Send me the guide</button>
+  </form>
+  <p class="fine-print" style="margin-left:auto; margin-right:auto;">By submitting you'll receive "The PRFM Method" — our free guide — plus occasional emails about your spot. Only <span class="spots-count">100</span> waitlist spots available before launch.</p>
+</section>
+
+<footer>
+  <div class="wordmark"><img src="images/logo-white.png" alt="PRFM"></div>
+  PRFM TRAINING © 2026 · DUNEDIN, NZ — COACHING WORLDWIDE
+</footer>
+
+<script src="style/main.js"></script>
+</body>
+</html>
